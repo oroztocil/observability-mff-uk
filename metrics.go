@@ -1,11 +1,12 @@
 package main
 
 import (
+	"net/http"
+	"strconv"
+
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 	"go.opentelemetry.io/otel"
-	"net/http"
-	"strconv"
 )
 
 type responseWriter struct {
@@ -32,8 +33,7 @@ var totalRequests = prometheus.NewCounterVec(
 		Help: "Number of http requests.",
 	},
 	// TODO Metrics: Add following labels to the metrics: method, path & app. Uncomment following line and delete the next one.
-	// []string{"method", "path", "app"},
-	[]string{},
+	[]string{"method", "path", "app"},
 )
 
 var responseStatus = prometheus.NewCounterVec(
@@ -42,8 +42,7 @@ var responseStatus = prometheus.NewCounterVec(
 		Help: "Status of http response",
 	},
 	// TODO Metrics: Add following labels to the metrics: status & app. Uncomment following line and delete the next one.
-	// []string{"status", "app"},
-	[]string{},
+	[]string{"status", "app"},
 )
 
 var httpDuration = promauto.NewHistogramVec(
@@ -52,8 +51,7 @@ var httpDuration = promauto.NewHistogramVec(
 		Help: "Duration of http requests.",
 	},
 	// TODO Metrics: Add following labels to the metrics: method, path & app. Uncomment following line and delete the next one.
-	// []string{"method", "path", "app"},
-	[]string{},
+	[]string{"method", "path", "app"},
 )
 
 func metricsMiddleware(next http.Handler) http.Handler {
